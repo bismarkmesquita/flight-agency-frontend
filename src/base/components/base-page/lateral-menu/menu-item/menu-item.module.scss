@@ -1,0 +1,49 @@
+.listItem {
+  :global(.MuiListItemIcon-root) {
+    min-width: 24px;
+    color: var(--text-secondary);
+    margin-right: 10px;
+  }
+
+  :global(.MuiTypography-root) {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  &:global(.MuiListItem-root) {
+    display: block;
+    padding: 0;
+    width: 95%;
+    margin: 0 auto;
+    border-radius: 12px;
+    &:hover {
+      border-radius: 12px;
+      background-color: rgb(from var(--color-primary) r g b / 0.1);
+    }
+  }
+
+  &:global(.MuiListItemButton-root) {
+    border-radius: 12px;
+    min-height: 48px;
+    margin: 12px 5px;
+    &:hover {
+      background-color: rgb(from var(--color-primary) r g b / 0.1);
+    }
+  }
+
+  &.selected {
+    :global(.MuiListItemIcon-root) {
+      color: var(--color-primary);
+    }
+    color: var(--color-primary);
+    background-color: rgb(from var(--color-primary) r g b / 0.1);
+  }
+}
+
+.closedMenuItem {
+  :global(.MuiListItemButton-root) {
+    :global(.MuiListItemText-root) {
+      opacity: 0;
+    }
+  }
+}

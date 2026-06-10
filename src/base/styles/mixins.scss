@@ -1,0 +1,101 @@
+@mixin center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin cover($center-content: false) {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  @if $center-content {
+    @include center-content;
+  }
+}
+
+@mixin row-gap($gap, $justify-content: flex-start, $align-items: center) {
+  display: flex;
+  flex-direction: row;
+  column-gap: $gap;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin column-gap($gap, $justify-content: center, $align-items: flex-start) {
+  display: flex;
+  flex-direction: column;
+  row-gap: $gap;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin container(
+  $border-radius: 18px,
+  $background-color: var(--color-container)
+) {
+  background-color: $background-color;
+  border-radius: $border-radius;
+}
+
+@mixin bordered-cointainer(
+  $border-radius: 18px,
+  $background-color: var(--color-container)
+) {
+  @include container($border-radius, $background-color);
+  border: 1px solid var(--color-border);
+}
+
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: 769px) and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1025px) {
+    @content;
+  }
+}
+
+@mixin default-table {
+  .root {
+    margin-top: 20px;
+    @include bordered-cointainer;
+    padding: 20px;
+    @include column-gap(10px);
+  }
+
+  .table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+  }
+
+  @include mobile {
+    .size {
+      font-size: 12px !important;
+    }
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .nothing {
+    width: 100%;
+    height: calc(100vh - 200px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

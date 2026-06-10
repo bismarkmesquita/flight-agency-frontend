@@ -1,0 +1,78 @@
+.root {
+  @include column-gap(20px, center, stretch);
+  font-size: 14px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+}
+
+.welcome {
+  @include column-gap(8px, center, center);
+
+  .title {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .description {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+}
+
+.input {
+  p {
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+}
+
+.demo {
+  @include column-gap(8px, center, stretch);
+
+  p {
+    font-weight: 500;
+  }
+
+  span {
+    align-self: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+}
+
+.textField {
+  :global(input) {
+    font-size: 14px;
+  }
+}
+
+.toggleButtonGroup {
+  background-color: var(--color-border);
+  box-sizing: border-box;
+  border-radius: 12px !important;
+  padding: 4px;
+  gap: 4px;
+}
+
+.toggleButton {
+  border-radius: 10px !important;
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-transform: capitalize !important;
+
+  border: none !important;
+
+  .MuiToggleButton-root {
+    border: none !important;
+  }
+
+  &:global(.Mui-selected) {
+    color: var(--color-primary) !important;
+    background-color: var(--color-container) !important;
+  }
+}

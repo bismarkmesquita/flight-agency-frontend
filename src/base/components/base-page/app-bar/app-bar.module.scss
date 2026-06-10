@@ -1,0 +1,45 @@
+.appBar {
+  h3 {
+    font-weight: 600;
+  }
+
+  &:global(.MuiAppBar-root) {
+    background-color: var(--color-container);
+    color: #000;
+    box-shadow: none;
+    border-bottom: 1px solid #dfdfdf;
+    height: 65px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 10px 0 74px; // 64px of the container + 10px of the padding
+
+    @include mobile {
+      justify-content: flex-end;
+    }
+  }
+
+  .menu {
+    cursor: pointer;
+    display: none;
+    @include mobile {
+      display: block;
+    }
+  }
+}
+
+@mixin open-menu {
+  &:global(.MuiAppBar-root) {
+    padding-left: 270px; // 240px of the container + 10px of the padding
+  }
+}
+
+.appBarMenuOpen {
+  @include tablet {
+    @include open-menu;
+  }
+
+  @include desktop {
+    @include open-menu;
+  }
+}

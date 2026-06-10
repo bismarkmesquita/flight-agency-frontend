@@ -1,0 +1,11 @@
+.logo {
+  @include row-gap(10px, center, center);
+  .icon {
+    font-size: 28px;
+    color: var(--color-primary);
+  }
+  p {
+    font-size: 18px;
+    font-weight: 600;
+  }  
+}

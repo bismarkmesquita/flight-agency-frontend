@@ -1,0 +1,85 @@
+.root {
+  display: flex;
+}
+
+.divider {
+  width: 90%;
+  &:global(.MuiDivider-root) {
+    margin: 0 auto;
+  }
+}
+
+.logo {
+  margin-left: 3px;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  padding: 0 5%;
+  background-color: var(--color-background);
+  box-sizing: border-box;
+  * {
+    fill: #000;
+  }
+}
+
+.main {
+  width: 100%;
+}
+
+.drawerHeaderJustifyBetween {
+  justify-content: space-between;
+}
+
+.drawer {
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+@mixin openedDrawer {
+  background-color: var(--color-background);
+  width: 260px;
+  transition: ease-out 0.3s;
+}
+
+@mixin closedDrawer {
+  background-color: var(--color-background);
+  width: 60px;
+  overflow-x: hidden;
+  transition: ease-in 0.3s;
+}
+
+.openedDrawer {
+  &:global(.MuiDrawer-root) {
+    @include openedDrawer;
+  }
+  *:global(.MuiDrawer-paper) {
+    @include openedDrawer;
+  }
+}
+
+.closedDrawer {
+  &:global(.MuiDrawer-root) {
+    @include closedDrawer;
+  }
+  *:global(.MuiDrawer-paper) {
+    @include closedDrawer;
+  }
+
+  .footer {
+    display: none;
+  }
+}
+
+.footer {
+  font-size: 10px;
+  text-align: center;
+  display: inline-block;
+  margin: auto 0 10px;
+  color: var(--color-detail);
+  white-space: normal;
+}

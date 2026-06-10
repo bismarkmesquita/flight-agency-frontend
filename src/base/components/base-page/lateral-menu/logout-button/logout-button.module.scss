@@ -1,0 +1,22 @@
+.logoutButton {
+  background-color: var(--color-secondary) !important;
+  width: 95%;
+  height: 48px;
+  margin: 12px auto;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  fill: var(--color-error) !important;
+  color: var(--color-error) !important;
+  gap: 10px;
+
+  & > :global(.MuiListItem-root) {
+    :global(.MuiListItemIcon-root) {
+      fill: var(--color-error) !important;
+      color: var(--color-error) !important;
+    }
+  }
+}

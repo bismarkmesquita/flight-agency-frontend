@@ -1,0 +1,12 @@
+.profile {
+    @include row-gap(8px);
+
+    img {
+        border-radius: 50%;
+        width: 40px;
+    }
+
+    .name {
+        font-weight: 500;
+    }
+}
