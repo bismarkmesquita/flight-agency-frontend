@@ -13,7 +13,7 @@
   color: var(--color-error) !important;
   gap: 10px;
 
-  & > :global(.MuiListItem-root) {
+  &> :global(.MuiListItem-root) {
     :global(.MuiListItemIcon-root) {
       fill: var(--color-error) !important;
       color: var(--color-error) !important;

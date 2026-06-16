@@ -1,5 +1,6 @@
 .root {
     @include column-gap(8px);
+
     @include mobile {
         align-items: center;
         text-align: center;
