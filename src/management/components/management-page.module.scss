@@ -1,0 +1,8 @@
+.main {
+    padding: 32px;
+    @include column-gap(24px, center, stretch);
+}
+
+.sections {
+    @include column-gap(40px, center, stretch);
+}

@@ -1,0 +1,15 @@
+.title {
+    @include row-gap(16px, space-between, center);
+}
+
+.content {
+    @include column-gap(20px, flex-start, stretch);
+}
+
+.list {
+    @include column-gap(10px, center, flex-start);
+}
+
+.button {
+    align-self: center;
+}

@@ -1,7 +1,7 @@
 export enum UserRole {
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  SELLER = 'SELLER',
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  SELLER = 'seller',
 }
 
 export const USER_ROLE_TO_LABEL = {
