@@ -1,0 +1,44 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    color: var(--color-primary);
+}
+
+.logo {
+  @include row-gap(16px, center, center);
+    cursor: pointer;
+
+    .icon {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+}
+
+.table {
+  width: 100%;
+  overflow: visible;
+  max-height: 100vh;
+}
+
+.tableHead,
+.tableCell {
+    color: var(--color-background) !important;
+    background-color: var(--color-primary) !important;
+    font-size: clamp(1.125rem, 2vw, 1.25rem) !important;
+    font-weight: 600 !important;
+}
+
+.size {
+    font-size: clamp(1.12rem, 1.8vw, 1.2rem) !important;
+    font-weight: 600 !important;
+}
+
+@include mobile {
+  .size {
+    font-size: 12px !important;
+  }
+}
