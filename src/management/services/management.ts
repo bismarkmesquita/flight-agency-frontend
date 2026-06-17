@@ -71,7 +71,6 @@ class ManagementService {
             `/agency/suppliers/${id}/`,
             data
         );
-        console.log("RESPONSE: ", response.data)
         return response.data;
     }
 }

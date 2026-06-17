@@ -9,14 +9,14 @@
   align-items: center;
   cursor: pointer;
   box-sizing: border-box;
-  fill: var(--color-error) !important;
-  color: var(--color-error) !important;
+  fill: var(--color-text-light) !important;
+  color: var(--color-text-light) !important;
   gap: 10px;
 
   &> :global(.MuiListItem-root) {
     :global(.MuiListItemIcon-root) {
-      fill: var(--color-error) !important;
-      color: var(--color-error) !important;
+      fill: var(--color-text-light) !important;
+      color: var(--color-text-light) !important;
     }
   }
 }

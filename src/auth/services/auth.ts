@@ -18,7 +18,6 @@ class AuthService {
       '/auth/login/',
       payload
     );
-    console.log(resp)
     return resp.data;
   }
 

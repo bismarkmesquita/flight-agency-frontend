@@ -45,9 +45,6 @@ export default function LateralMenu({ children }: LateralMenuProps) {
   const { open, setOpen } = useLateralMenuContext();
   const [role, setRole] = React.useState<UserRole | undefined>(undefined);
 
-  console.log("ROLE: ", role)
-  console.log("ROLE: ", UserRole.MANAGER)
-
   useEffect(() => {
     const user = getAccessInfo();
     if (user?.role) {
