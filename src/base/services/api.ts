@@ -525,14 +525,14 @@ async function doTaskRequest<
     if (poolResult.status === TaskStatus.FAILURE) {
       return {
         success: false,
-        message: poolResult.message ?? 'Task falhou',
+        message: poolResult.message ?? 'Task failed',
       } as T;
     }
 
     if (Date.now() - startTime > timeout) {
       return {
         success: false,
-        message: 'Timeout ao aguardar task',
+        message: 'Timeout while waiting for task.',
       } as T;
     }
 
