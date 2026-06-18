@@ -293,6 +293,73 @@ function usePaginatedEndpoint<P, Q extends Record<string, unknown>>({
   };
 }
 
+interface UseFrontendPaginationProps<T> {
+  url: string;
+  pageSize: number;
+}
+
+export function useFrontendPagination<T>({ url, pageSize }: UseFrontendPaginationProps<T>) {
+  const API = usePrivateAPI();
+  const [allItems, setAllItems] = useState<T[]>([]);
+  const [items, setItems] = useState<T[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | undefined>();
+
+  const fetchAll = async () => {
+    try {
+      setLoading(true);
+      const res = await API.get(url);
+      setAllItems(res.data.items ?? []);
+    } catch (err) {
+      console.error(err);
+      setError("Erro ao carregar dados");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchItems = async () => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    setItems(allItems.slice(start, end));
+  }
+
+  const refresh = () => {
+    fetchAll();
+  }
+
+  const addItem = (item: T) => {
+    setAllItems(prev => [item, ...prev]);
+  };
+
+  useEffect(() => {
+    fetchAll();
+  }, [url]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [allItems, page, pageSize]);
+
+  const numPages = useMemo(
+    () => Math.ceil(allItems.length / pageSize),
+    [allItems, pageSize]
+  );
+
+  return {
+    items,
+    page,
+    setPage,
+    numPages,
+    loading,
+    error,
+    allItems,
+    setAllItems,
+    refresh,
+    addItem,
+  };
+}
+
 function getModifiedAPI(axiosInstance: AxiosInstance) {
   const instance = Object.assign({}, axiosInstance);
   instance.request = async <T = any, R = AxiosResponse<T>>(
