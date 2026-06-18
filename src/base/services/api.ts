@@ -293,6 +293,73 @@ function usePaginatedEndpoint<P, Q extends Record<string, unknown>>({
   };
 }
 
+interface UseFrontendPaginationProps<T> {
+  url: string;
+  pageSize: number;
+}
+
+export function useFrontendPagination<T>({ url, pageSize }: UseFrontendPaginationProps<T>) {
+  const API = usePrivateAPI();
+  const [allItems, setAllItems] = useState<T[]>([]);
+  const [items, setItems] = useState<T[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | undefined>();
+
+  const fetchAll = async () => {
+    try {
+      setLoading(true);
+      const res = await API.get(url);
+      setAllItems(res.data.items ?? []);
+    } catch (err) {
+      console.error(err);
+      setError("Error loading data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchItems = async () => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    setItems(allItems.slice(start, end));
+  }
+
+  const refresh = () => {
+    fetchAll();
+  }
+
+  const addItem = (item: T) => {
+    setAllItems(prev => [item, ...prev]);
+  };
+
+  useEffect(() => {
+    fetchAll();
+  }, [url]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [allItems, page, pageSize]);
+
+  const numPages = useMemo(
+    () => Math.ceil(allItems.length / pageSize),
+    [allItems, pageSize]
+  );
+
+  return {
+    items,
+    page,
+    setPage,
+    numPages,
+    loading,
+    error,
+    allItems,
+    setAllItems,
+    refresh,
+    addItem,
+  };
+}
+
 function getModifiedAPI(axiosInstance: AxiosInstance) {
   const instance = Object.assign({}, axiosInstance);
   instance.request = async <T = any, R = AxiosResponse<T>>(
@@ -377,7 +444,7 @@ function onRequestError(
       success: false,
       reason: 'unknown',
       message:
-        'Ocorreu um erro inesperado.\nLog do erro: ' + error.response?.data,
+        'An unexpected error occurred.\nError log: ' + error.response?.data,
     }));
   }
 
@@ -436,7 +503,7 @@ async function doTaskRequest<
   if (!taskResult.success) {
     return {
       success: false,
-      message: taskResult.message ?? 'Erro ao criar task',
+      message: taskResult.message ?? 'Error creating task.',
     } as T;
   }
 
@@ -447,7 +514,7 @@ async function doTaskRequest<
     if (!poolResult.success) {
       return {
         success: false,
-        message: poolResult.message ?? 'Erro ao obter status da task',
+        message: poolResult.message ?? 'Error retrieving task status.',
       } as T;
     }
 
@@ -458,14 +525,14 @@ async function doTaskRequest<
     if (poolResult.status === TaskStatus.FAILURE) {
       return {
         success: false,
-        message: poolResult.message ?? 'Task falhou',
+        message: poolResult.message ?? 'Task failed',
       } as T;
     }
 
     if (Date.now() - startTime > timeout) {
       return {
         success: false,
-        message: 'Timeout ao aguardar task',
+        message: 'Timeout while waiting for task.',
       } as T;
     }
 
