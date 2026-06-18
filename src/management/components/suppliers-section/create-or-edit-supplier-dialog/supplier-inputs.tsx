@@ -293,7 +293,7 @@ export function NeighborhoodInput({
             name='neighborhood'
             control={control}
             rules={{
-                required: 'Bairro is required.',
+                required: 'Neighborhood is required.',
             }}
             render={({ field }) => (
                 <TextField
@@ -301,7 +301,7 @@ export function NeighborhoodInput({
                     fullWidth
                     disabled={disabled}
                     size='small'
-                    label='Bairro'
+                    label='Neighborhood'
                     value={field.value ?? ''}
                     onChange={field.onChange}
                     error={!!errors.neighborhood}

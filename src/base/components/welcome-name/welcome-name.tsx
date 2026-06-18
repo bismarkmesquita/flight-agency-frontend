@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import style from './welcome-name.module.scss';
 
 export default function WelcomeName() {
-  const [name, setName] = useState<string>('Gestor');
+  const [name, setName] = useState<string>('Manager');
 
   useEffect(() => {
     const user = getAccessInfo();
