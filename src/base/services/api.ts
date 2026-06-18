@@ -313,7 +313,7 @@ export function useFrontendPagination<T>({ url, pageSize }: UseFrontendPaginatio
       setAllItems(res.data.items ?? []);
     } catch (err) {
       console.error(err);
-      setError("Erro ao carregar dados");
+      setError("Error loading data.");
     } finally {
       setLoading(false);
     }
@@ -444,7 +444,7 @@ function onRequestError(
       success: false,
       reason: 'unknown',
       message:
-        'Ocorreu um erro inesperado.\nLog do erro: ' + error.response?.data,
+        'An unexpected error occurred.\nError log: ' + error.response?.data,
     }));
   }
 
@@ -503,7 +503,7 @@ async function doTaskRequest<
   if (!taskResult.success) {
     return {
       success: false,
-      message: taskResult.message ?? 'Erro ao criar task',
+      message: taskResult.message ?? 'Error creating task.',
     } as T;
   }
 
@@ -514,7 +514,7 @@ async function doTaskRequest<
     if (!poolResult.success) {
       return {
         success: false,
-        message: poolResult.message ?? 'Erro ao obter status da task',
+        message: poolResult.message ?? 'Error retrieving task status.',
       } as T;
     }
 
