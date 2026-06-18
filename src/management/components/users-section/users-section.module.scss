@@ -1,0 +1,40 @@
+.main {
+  @include column-gap(16px, center, stretch);
+
+  @include bordered-container;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+}
+
+.header {
+  @include row-gap(16px, space-between, center);
+
+  h2 {
+    font-size: 18;
+    font-weight: 600;
+  }
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(80vh - 260px);
+}
+
+.tableCell {
+  font-weight: 600 !important;
+  height: 24px;
+}
+
+@include mobile {
+  .size {
+    font-size: 12px !important;
+  }
+
+  .header {
+    h2 {
+      font-size: 16;
+    }
+  }
+}

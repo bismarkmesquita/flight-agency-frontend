@@ -10,18 +10,18 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    goToHome(router);
+    goToDashboard(router);
   }, []);
 
   return <LoadingWrapper loading={false} absoluteCenter={true} />;
 }
 
-function goToHome(router: AppRouterInstance) {
+function goToDashboard(router: AppRouterInstance) {
   const token = getAccessToken();
 
   if (!token) {
     router.push('/login');
   } else {
-    router.push('/home');
+    router.push('/dashboard');
   }
 }

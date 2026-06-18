@@ -20,15 +20,14 @@ import {
 } from '@mui/icons-material';
 import MenuItem from './menu-item/menu-item';
 import { useLateralMenuContext } from './provider';
-import Image from 'next/image';
 import LogoutButton from './logout-button/logout-button';
 import style from './lateral-menu.module.scss';
-import Logo from '@images/logo.webp';
 import { useIsMobile } from '@/base/styles/hooks';
 import { UserRole } from '@/auth/enums/user-role';
 import { useEffect } from 'react';
 import { getAccessInfo } from '@/auth/utils/auth';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import Logo from '../../logo/logo';
 
 interface MenuItem {
   icon: React.ReactNode;
@@ -126,13 +125,7 @@ export default function LateralMenu({ children }: LateralMenuProps) {
       >
         <DrawerHeader open={open}>
           {open && (
-            <Image
-              src={Logo}
-              alt='Logo'
-              width={130}
-              height={30}
-              className={style.logo}
-            />
+            <Logo />
           )}
           <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
             {actualIcon}

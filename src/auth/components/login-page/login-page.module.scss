@@ -17,7 +17,7 @@
 }
 
 .container {
-  @include bordered-cointainer;
+  @include bordered-container;
   @include column-gap(24px, center, center);
   align-self: center;
   padding: 30px;
