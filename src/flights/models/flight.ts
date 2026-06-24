@@ -9,7 +9,7 @@ export interface FlightReservation {
 
 export interface Flight {
     id: number;
-    iata: string;
+    flight_number: number;
     airline: Airline;
     departure_date: string;
     departure_airport: Airport;
