@@ -29,7 +29,7 @@ class FlightService {
         interface Response {
             flights: Flight[];
         }
-        const response = await this.privateAPI.get<APIResponse<Response>>('/flights/next');
+        const response = await this.privateAPI.get<APIResponse<Response>>('/flights/next/');
         return response.data;
     }
 
@@ -43,7 +43,7 @@ class FlightService {
             departure_date: data.departure_date.toISOString(),
         };
         const response = await this.privateAPI.post<APIResponse<Response>>(
-            '/flight/',
+            '/flights/',
             payload
         );
         return response.data;

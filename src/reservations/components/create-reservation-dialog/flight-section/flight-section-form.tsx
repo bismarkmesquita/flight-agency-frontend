@@ -3,7 +3,7 @@ import style from "../create-reservation-dialog.module.scss";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useFlightsContext } from "@/flights/providers/flights-context";
-import { AirlineInput, ArrivalAirportInput, DepartureAirportInput, FlightIataInput } from "./flight-inputs";
+import { AirlineInput, ArrivalAirportInput, DepartureAirportInput, FlightNumberInput } from "./flight-inputs";
 import { DateInput } from "@/base/components/date-input/date-input";
 import { useForm } from "react-hook-form";
 import { useReservationStepperContext } from "@/reservations/providers/reservation-stepper-context";
@@ -12,15 +12,17 @@ import { FlightForm } from "@/flights/models/forms";
 import { useFlightService } from "@/flights/services/flights";
 import { Airline } from "@/flights/models/airline";
 import { Airport } from "@/flights/models/airport";
+import { Flight } from "@/flights/models/flight";
 
 export default function FlightSectionForm() {
     const { showSnackbar } = useSnackbar();
-    const { handleNext, selectedFlight, setSelectedFlight } = useReservationStepperContext();
+    const { handleNext, selectedFlights, setSelectedFlights } = useReservationStepperContext();
     const { flights, createFlight } = useFlightsContext();
 
     const flightService = useFlightService();
     const [airlines, setAirlines] = useState<Airline[]>([]);
     const [airports, setAirports] = useState<Airport[]>([]);
+    const [selectedFlightOption, setSelectedFlightOption] = useState<Flight | null>(null);
 
     useEffect(() => {
         fetchAirlines();
@@ -44,9 +46,9 @@ export default function FlightSectionForm() {
     const {
         control: flightControl,
         formState: { errors: flightErrors },
-        setValue,
         getValues,
         trigger,
+        reset,
     } = useForm<FlightForm>({
         defaultValues: {
             departure_date: new Date(),
@@ -54,29 +56,46 @@ export default function FlightSectionForm() {
         },
     });
 
-    useEffect(() => {
-        if (!selectedFlight) return;
-
-        setValue("flight_number", selectedFlight.flight_number.toString());
-        setValue("airline_id", selectedFlight.airline.id);
-        setValue("departure_airport_id", selectedFlight.departure_airport.id);
-        setValue("arrival_airport_id", selectedFlight.arrival_airport.id);
-        setValue("departure_date", new Date(selectedFlight.departure_date));
-        setValue("arrival_date", new Date(selectedFlight.arrival_date));
-    }, [selectedFlight]);
-
-    const handleCreateFlightOrNext = async () => {
-        if (selectedFlight) {
-            handleNext();
+    const handleSelectFlight = (flight: Flight | null) => {
+        if (!flight) {
             return;
         }
 
+        const alreadySelected = selectedFlights.some(
+            (selectedFlight) => selectedFlight.id === flight.id
+        );
+
+        if (alreadySelected) {
+            showSnackbar(
+                "This flight has already been selected.",
+                "warning"
+            );
+            return;
+        }
+
+        setSelectedFlights([
+            ...selectedFlights,
+            flight,
+        ]);
+    };
+
+    const handleRemoveFlight = (flightId: number) => {
+        setSelectedFlights(
+            selectedFlights.filter(
+                (flight) => flight.id !== flightId
+            )
+        );
+    };
+
+    const handleCreateFlight = async () => {
         const valid = await trigger();
+
         if (!valid) {
             return;
         }
 
         const formValues = getValues();
+
         const response = await createFlight(formValues);
 
         if (!response.success) {
@@ -85,97 +104,172 @@ export default function FlightSectionForm() {
         }
 
         const createdFlight = response.flight;
-        setSelectedFlight(createdFlight);
+
+        setSelectedFlights([
+            ...selectedFlights,
+            createdFlight,
+        ]);
+
+        reset({
+            departure_date: new Date(),
+            arrival_date: new Date(),
+        });
+
+        showSnackbar(
+            "Flight successfully added.",
+            "success"
+        );
+    };
+
+    const handleNextStep = () => {
+        if (selectedFlights.length === 0) {
+            showSnackbar(
+                "Select or register at least one flight.",
+                "error"
+            );
+
+            return;
+        }
 
         handleNext();
-        showSnackbar("Flight successfully added.", "success");
-    }
+    };
 
     return (
         <div className={style.flight}>
-            <h3>Buscar Voo</h3>
-            <div className={style.search}>
-                <div className={style.dropdown}>
-                    <Autocomplete
-                        fullWidth
-                        options={flights}
-                        getOptionLabel={(option) => {
-                            if (!option) return "";
-                            return `${option.flight_number} (
-                            ${option.departure_airport} -
-                            ${format(option.departure_date, "dd/MM/yyyy - HH:mm")}
-                            )`;
-                        }}
-                        onChange={(event, newValue) => {
-                            setSelectedFlight(newValue ?? null);
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                size="small"
-                                label="Flight"
-                                variant="outlined"
-                            />
-                        )}
+            <div className={style.section}>
+                {selectedFlights.length > 0 && (
+                    <div className={style.selectedFlights}>
+                        <div className={style.chips}>
+                            {selectedFlights.map((flight) => (
+                                <Chip
+                                    key={flight.id}
+                                    label={`${flight.iata} - ${flight.departure_airport.iata} → ${flight.arrival_airport.iata}`}
+                                    onDelete={() =>
+                                        handleRemoveFlight(flight.id)
+                                    }
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <Divider>
+                    <Chip
+                        label="Select Flights"
+                        variant="outlined"
+                        size="small"
                     />
+                </Divider>
+
+                <div className={style.search}>
+                    <div className={style.dropdown}>
+                        <Autocomplete
+                            fullWidth
+                            value={selectedFlightOption}
+                            options={flights}
+                            getOptionLabel={(option) => {
+                                if (!option) {
+                                    return "";
+                                }
+
+                                return `${option.iata} (${option.departure_airport.iata} → ${option.arrival_airport.iata} - ${format(
+                                    new Date(option.departure_date),
+                                    "dd/MM/yyyy - HH:mm"
+                                )})`;
+                            }}
+                            onChange={(_, newValue) => {
+                                if (newValue) {
+                                    handleSelectFlight(newValue);
+                                    setSelectedFlightOption(null);
+                                }
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    size="small"
+                                    label="Search flight"
+                                    variant="outlined"
+                                />
+                            )}
+                        />
+                    </div>
                 </div>
             </div>
-            <Divider>
-                <Chip label="Flight Data" variant="outlined" size="small" />
-            </Divider>
-            <div className={style.inputs}>
-                <div className={style.couple}>
-                    <FlightIataInput
-                        control={flightControl}
-                        errors={flightErrors}
-                        disabled={!!selectedFlight}
+
+            <div className={style.section}>
+                <Divider>
+                    <Chip
+                        label="Register New Flight"
+                        variant="outlined"
+                        size="small"
                     />
-                    <AirlineInput
-                        control={flightControl}
-                        errors={flightErrors}
-                        airlines={airlines}
-                        disabled={!!selectedFlight}
-                    />
+                </Divider>
+
+                <div className={style.inputs}>
+                    <div className={style.couple}>
+                        <FlightNumberInput
+                            control={flightControl}
+                            errors={flightErrors}
+                        />
+
+                        <AirlineInput
+                            control={flightControl}
+                            errors={flightErrors}
+                            airlines={airlines}
+                        />
+                    </div>
+
+                    <div className={style.couple}>
+                        <DepartureAirportInput
+                            control={flightControl}
+                            errors={flightErrors}
+                            airports={airports}
+                        />
+
+                        <ArrivalAirportInput
+                            control={flightControl}
+                            errors={flightErrors}
+                            airports={airports}
+                        />
+                    </div>
+
+                    <div className={style.couple}>
+                        <DateInput<FlightForm>
+                            control={flightControl}
+                            errors={flightErrors}
+                            name="departure_date"
+                            label="Departure date"
+                        />
+
+                        <DateInput<FlightForm>
+                            control={flightControl}
+                            errors={flightErrors}
+                            name="arrival_date"
+                            label="Arrival date"
+                        />
+                    </div>
+
+                    <div className={style.actions}>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={handleCreateFlight}
+                        >
+                            Add Flight
+                        </Button>
+                    </div>
                 </div>
-                <div className={style.couple}>
-                    <DepartureAirportInput
-                        control={flightControl}
-                        errors={flightErrors}
-                        airports={airports}
-                        disabled={!!selectedFlight}
-                    />
-                    <ArrivalAirportInput
-                        control={flightControl}
-                        errors={flightErrors}
-                        airports={airports}
-                        disabled={!!selectedFlight}
-                    />
-                </div>
-                <div className={style.couple}>
-                    <DateInput<FlightForm>
-                        control={flightControl}
-                        errors={flightErrors}
-                        name="departure_date"
-                        label="Departure date"
-                        disabled={!!selectedFlight}
-                    />
-                    <DateInput<FlightForm>
-                        control={flightControl}
-                        errors={flightErrors}
-                        name="arrival_date"
-                        label="Arrival Date"
-                        disabled={!!selectedFlight}
-                    />
-                </div>
-                <div className={style.actions}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleCreateFlightOrNext}
-                    >
-                        {selectedFlight ? "Next" : "Register flight"}
-                    </Button>
-                </div>
+            </div>
+
+            <div className={style.actions}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNextStep}
+                    disabled={selectedFlights.length === 0}
+                >
+                    Next
+                </Button>
             </div>
         </div>
     )

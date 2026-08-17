@@ -12,8 +12,15 @@
 .client,
 .reservation,
 .inputs,
+.section,
 .stepper {
     @include column-gap(16px, center, stretch);
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .search {

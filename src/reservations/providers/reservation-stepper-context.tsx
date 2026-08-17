@@ -9,8 +9,8 @@ interface ReservationStepperContextType {
     steps: string[];
     activeStep: number;
 
-    selectedFlight: Flight | null;
-    setSelectedFlight: (flight: Flight | null) => void;
+    selectedFlights: Flight[];
+    setSelectedFlights: (flights: Flight[]) => void;
 
     selectedCustomer: Customer | null;
     setSelectedCustomer: (customer: Customer | null) => void;
@@ -32,7 +32,7 @@ const ReservationStepperContext = createContext<ReservationStepperContextType | 
 export function ReservationStepperProvider({ children }: { children: ReactNode }) {
     const steps = ["Flight Data", "Customer Data", "Reservation Data", "Confirm Data"];
     const [activeStep, setActiveStep] = useState<number>(0);
-    const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+    const [selectedFlights, setSelectedFlights] = useState<Flight[]>([]);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
     const [reservationData, setReservationData] = useState<CreateReservationForm | null>(null);
     const [saleData, setSaleData] = useState<CreateSaleForm | null>(null);
@@ -48,7 +48,7 @@ export function ReservationStepperProvider({ children }: { children: ReactNode }
     };
 
     const resetReservationStepper = () => {
-        setSelectedFlight(null);
+        setSelectedFlights([]);
         setSelectedCustomer(null);
         setReservationData(null);
         setSaleData(null);
@@ -60,8 +60,8 @@ export function ReservationStepperProvider({ children }: { children: ReactNode }
             value={{
                 steps,
                 activeStep,
-                selectedFlight,
-                setSelectedFlight,
+                selectedFlights,
+                setSelectedFlights,
                 selectedCustomer,
                 setSelectedCustomer,
                 reservationData,

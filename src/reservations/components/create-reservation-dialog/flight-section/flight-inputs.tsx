@@ -6,7 +6,7 @@ import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 const FLIGHT_NUMBER_MAX_LENGTH: number = 4;
 
-export function FlightIataInput({
+export function FlightNumberInput({
   control,
   errors,
   disabled = false,
