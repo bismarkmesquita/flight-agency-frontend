@@ -128,7 +128,7 @@ function ReservationRow({ reservation }: { reservation: Reservation }) {
             </TableCell>
             <TableCell align='center' className={style.size}>
                 {reservation.flights
-                    .map((flight) => flight.flight_number?.toString() || "")
+                    .map((flight) => flight.iata?.toString() || "")
                     .join(" ")}
             </TableCell>
             <TableCell align='center' className={style.size}>

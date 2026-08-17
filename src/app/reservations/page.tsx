@@ -8,7 +8,7 @@ import { SearchReservationsProvider } from "@/reservations/providers/search-rese
 
 export default function Page() {
     return (
-        <BasePage title="Reservas">
+        <BasePage title="Reservations">
             <FlightsProvider>
                 <CustomersProvider>
                     <SearchReservationsProvider>
