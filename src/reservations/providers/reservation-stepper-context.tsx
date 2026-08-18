@@ -30,7 +30,7 @@ interface ReservationStepperContextType {
 const ReservationStepperContext = createContext<ReservationStepperContextType | null>(null);
 
 export function ReservationStepperProvider({ children }: { children: ReactNode }) {
-    const steps = ["Flight Data", "Customer Data", "Reservation Data", "Confirm Data"];
+    const steps = ["Flight Data", "Customer Data", "Sale Data", "Reservation Data", "Confirm Data"];
     const [activeStep, setActiveStep] = useState<number>(0);
     const [selectedFlights, setSelectedFlights] = useState<Flight[]>([]);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);

@@ -1,7 +1,6 @@
 import { PaymentMethod, SaleType } from "./sale";
 
 export interface CreateReservationForm {
-    id: number;
     sale_id: number;
     locator: string;
     passenger_count: number;

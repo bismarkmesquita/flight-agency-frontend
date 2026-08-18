@@ -1,15 +1,19 @@
-import { useFrontendPagination } from "@/base/services/api";
-import { Reservation } from "@/reservations/models/reservation";
-import { APIResponse, usePrivateAPI } from "@/base/services/api";
-import { AxiosInstance } from "axios";
 import { useMemo } from "react";
+import { AxiosInstance } from "axios";
+import { useFrontendPagination } from "@/base/services/api";
+import { APIResponse, usePrivateAPI } from "@/base/services/api";
+import { Sale } from "../models/sale";
+import { Reservation } from "@/reservations/models/reservation";
 import { CreateReservationForm, CreateSaleForm } from "../models/forms";
 
 class ReservationService {
     constructor(private privateAPI: AxiosInstance) { }
 
     async createReservation(data: CreateReservationForm) {
-        const response = await this.privateAPI.post<APIResponse<Response>>(
+        interface ReservationResponse {
+            reservation: Reservation;
+        }
+        const response = await this.privateAPI.post<APIResponse<ReservationResponse>>(
             '/agency/reservations/',
             data
         );
@@ -17,7 +21,10 @@ class ReservationService {
     }
 
     async createSale(data: CreateSaleForm) {
-        const response = await this.privateAPI.post<APIResponse<Response>>(
+        interface SaleResponse {
+            sale: Sale;
+        }
+        const response = await this.privateAPI.post<APIResponse<SaleResponse>>(
             '/agency/sales/',
             data
         );

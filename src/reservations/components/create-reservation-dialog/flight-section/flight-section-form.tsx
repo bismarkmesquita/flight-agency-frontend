@@ -248,20 +248,17 @@ export default function FlightSectionForm() {
                             label="Arrival date"
                         />
                     </div>
-
-                    <div className={style.actions}>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={handleCreateFlight}
-                        >
-                            Add Flight
-                        </Button>
-                    </div>
                 </div>
             </div>
 
             <div className={style.actions}>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleCreateFlight}
+                >
+                    Add Flight
+                </Button>
                 <Button
                     variant="contained"
                     color="primary"

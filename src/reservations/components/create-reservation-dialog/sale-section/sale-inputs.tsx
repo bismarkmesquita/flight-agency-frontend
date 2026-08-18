@@ -1,7 +1,7 @@
 import { User } from '@/auth/models/user';
 import { formatDateInput, formatMoney } from '@/base/utils/format-inputs';
 import { CreateSaleForm } from '@/reservations/models/forms';
-import { PAYMENT_METHOD_LABELS, PaymentMethod } from '@/reservations/models/sale';
+import { PAYMENT_METHOD_LABELS, PaymentMethod, SALE_TYPE, SaleType } from '@/reservations/models/sale';
 import { Autocomplete, MenuItem, TextField } from '@mui/material';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 
@@ -76,6 +76,48 @@ export function PaymentInput({
           helperText={errors.payment?.message}
         >
           {paymentOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
+    />
+  );
+}
+
+export const typeOptions = Object.entries(SALE_TYPE).map(
+  ([value, label]) => ({
+    value: value as SaleType,
+    label,
+  })
+);
+
+export function TypeInput({
+  control,
+  errors,
+}: {
+  control: Control<CreateSaleForm>;
+  errors: FieldErrors<CreateSaleForm>;
+}) {
+  return (
+    <Controller
+      name='type'
+      control={control}
+      rules={{ required: 'Type is required.' }}
+      render={({ field }) => (
+        <TextField
+          select
+          variant='outlined'
+          fullWidth
+          size='small'
+          label='Type'
+          value={field.value ?? ''}
+          onChange={field.onChange}
+          error={!!errors.type}
+          helperText={errors.type?.message}
+        >
+          {typeOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
@@ -200,38 +242,6 @@ export function IndicationInput({
             errors.indication?.message ?? `${field.value?.length ?? 0}/${INDICATION_MAX_LENGHT} characters.`
           }
           slotProps={{ htmlInput: { maxLength: INDICATION_MAX_LENGHT } }}
-        >
-        </TextField>
-      )}
-    />
-  );
-}
-
-export function SaleDateInput({
-  control,
-  errors,
-}: {
-  control: Control<CreateSaleForm>;
-  errors: FieldErrors<CreateSaleForm>;
-}) {
-  return (
-    <Controller
-      name='sale_date'
-      control={control}
-      render={({ field }) => (
-        <TextField
-          variant='outlined'
-          fullWidth
-          type='date'
-          size='small'
-          label='Sale date'
-          slotProps={
-            { inputLabel: { shrink: true } }
-          }
-          value={formatDateInput(field.value)}
-          onChange={field.onChange}
-          error={!!errors.sale_date}
-          helperText={errors.sale_date?.message}
         >
         </TextField>
       )}

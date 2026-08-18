@@ -1,5 +1,4 @@
 import {
-    Button,
     Dialog,
     DialogContent,
     DialogTitle,
@@ -15,6 +14,7 @@ import { useReservationStepperContext } from "@/reservations/providers/reservati
 import CustomerSectionForm from "./customer-section/customer-section-form";
 import ReservationSectionForm from "./reservation-section/reservation-section-form";
 import ConfirmReservationSection from "./confirm-section/confirm-section";
+import SaleSectionForm from "./sale-section/sale-section-form";
 
 type Props = {
     open: boolean;
@@ -51,8 +51,9 @@ export default function CreateReservationStepperDialog({
                     </Stepper>
                     {activeStep === 0 && <FlightSectionForm />}
                     {activeStep === 1 && <CustomerSectionForm />}
-                    {activeStep === 2 && <ReservationSectionForm />}
-                    {activeStep === 3 && <ConfirmReservationSection onSuccess={onSuccess} />}
+                    {activeStep === 2 && <SaleSectionForm />}
+                    {activeStep === 3 && <ReservationSectionForm />}
+                    {activeStep === 4 && <ConfirmReservationSection onSuccess={onSuccess} />}
                 </div>
             </DialogContent>
         </Dialog>

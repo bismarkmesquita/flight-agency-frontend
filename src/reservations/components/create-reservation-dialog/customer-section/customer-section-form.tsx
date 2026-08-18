@@ -55,11 +55,11 @@ export default function CustomerSectionForm() {
         setSelectedCustomer(createdCustomer);
 
         handleNext();
-        showSnackbar("Client added successfully.", "success");
+        showSnackbar("Customer added successfully.", "success");
     }
 
     return (
-        <div className={style.client}>
+        <div className={style.customer}>
             <h3>Looking for customers</h3>
             <div className={style.inputs}>
                 <CustomerInput

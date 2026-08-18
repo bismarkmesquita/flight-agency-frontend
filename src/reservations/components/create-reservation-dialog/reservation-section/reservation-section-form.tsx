@@ -1,18 +1,17 @@
 import { Button } from "@mui/material";
 import style from "../create-reservation-dialog.module.scss";
-import { CreateReservationForm, CreateSaleForm } from "@/reservations/models/forms";
+import { CreateReservationForm } from "@/reservations/models/forms";
 import { useForm } from "react-hook-form";
 import { useReservationStepperContext } from "@/reservations/providers/reservation-stepper-context";
 import { IssuerInput, LocatorInput, PassengersInput, SupplierInput } from "./reservation-inputs";
 import { useManagementContext } from "@/management/providers/management-context";
 import { useEffect } from "react";
-import { IndicationInput } from "../sale-section/sale-inputs";
 
 export default function ReservationSectionForm() {
     const { handleBack } = useReservationStepperContext();
     const { users, suppliers } = useManagementContext();
     const {
-        selectedFlight,
+        selectedFlights,
         selectedCustomer,
         reservationData,
         setReservationData,
@@ -27,14 +26,6 @@ export default function ReservationSectionForm() {
         trigger,
     } = useForm<CreateReservationForm>({});
 
-    // const {
-    //     control: saleControl,
-    //     formState: { errors: saleErrors },
-    //     getValues,
-    //     setValue,
-    //     trigger,
-    // } = useForm<CreateSaleForm>({});
-
     useEffect(() => {
         if (!reservationData) return;
 
@@ -48,7 +39,7 @@ export default function ReservationSectionForm() {
 
     const handleConfirmAndNext = async () => {
         const valid = await trigger();
-        if (!valid || !selectedFlight || !selectedCustomer) {
+        if (!valid || !selectedFlights || !selectedCustomer) {
             return;
         }
 
@@ -62,27 +53,14 @@ export default function ReservationSectionForm() {
         <div className={style.reservation}>
             <h3>Reservation Details</h3>
             <div className={style.inputs}>
-                <div className={style.couple}>
-                    <LocatorInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    />
-                    {/* <IndicationInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    /> */}
-                </div>
-                <div className={style.couple}>
-                    <PassengersInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    />
-                    {/* <QTDPaxInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    /> */}
-
-                </div>
+                <LocatorInput
+                    control={reservationControl}
+                    errors={reservationErrors}
+                />
+                <PassengersInput
+                    control={reservationControl}
+                    errors={reservationErrors}
+                />
                 <div className={style.couple}>
                     <IssuerInput
                         control={reservationControl}
@@ -93,31 +71,6 @@ export default function ReservationSectionForm() {
                         errors={reservationErrors}
                         suppliers={suppliers} />
                 </div>
-                <div className={style.couple}>
-                    {/* <SellerInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                        sellers={users}
-                    />
-                    <PaymentInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    /> */}
-                </div>
-                <div className={style.couple}>
-                    {/* <ReceivedInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    />
-                    <CostInput
-                        control={reservationControl}
-                        errors={reservationErrors}
-                    /> */}
-                </div>
-                {/* <DateSaleInput
-                    control={reservationControl}
-                    errors={reservationErrors}
-                /> */}
             </div>
             <div className={style.actions}>
                 <Button onClick={handleBack} variant="outlined">
