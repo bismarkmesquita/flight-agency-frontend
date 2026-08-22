@@ -74,7 +74,7 @@ export default function ConfirmReservationSection({ onSuccess }: Props) {
 
                 {/* Flights */}
                 <div className={style.confirmSection}>
-                    <h4>Flights</h4>
+                    <h3>Flights</h3>
 
                     {selectedFlights.map((flight) => (
                         <div key={flight.id}>
@@ -107,7 +107,7 @@ export default function ConfirmReservationSection({ onSuccess }: Props) {
 
                 {/* Customer */}
                 {selectedCustomer && <div className={style.confirmSection}>
-                    <h4>Customer</h4>
+                    <h3>Customer</h3>
                     <p><b>Name:</b>{" "}{selectedCustomer.name}</p>
                     <p><b>Email:</b>{" "}{selectedCustomer.email}</p>
                     <p><b>Phone:</b>{" "}{selectedCustomer.phone}</p>
@@ -115,21 +115,9 @@ export default function ConfirmReservationSection({ onSuccess }: Props) {
 
                 <Divider flexItem orientation={isMobile ? "horizontal" : "vertical"} />
 
-                {/* Reservation */}
-                {reservationData && <div className={style.confirmSection}>
-                    <h4>Reservation</h4>
-                    <p><b>Locator:</b>{" "}{reservationData.locator}</p>
-                    <p><b>Passenger Count:</b>{" "}{reservationData.passenger_count}</p>
-                    <p><b>Passengers:</b>{" "}{reservationData.passengers}</p>
-                    <p><b>Supplier:</b>{" "}{supplier?.name}</p>
-                    <p><b>Issuer(a):</b>{" "}{issuer?.name}</p>
-                </div>}
-
-                <Divider flexItem orientation={isMobile ? "horizontal" : "vertical"} />
-
                 {/* Sale */}
                 {saleData && <div className={style.confirmSection}>
-                    <h4>Sale</h4>
+                    <h3>Sale</h3>
                     <p><b>Seller(a):</b>{" "}{seller?.name}</p>
                     <p><b>Type:</b>{" "}{" "}{SALE_TYPE_LABELS[saleData.type]}</p>
                     <p><b>Indication:</b>{" "}{saleData.indication}</p>
@@ -137,6 +125,18 @@ export default function ConfirmReservationSection({ onSuccess }: Props) {
                     <p><b>Amount Received:</b>{" "}R$ {saleData.amount_received}</p>
                     <p><b>Cost:</b>{" "}R$ {saleData.cost}</p>
                     <p><b>Sale Date:</b>{" "}{format(saleData.sale_date, "dd/MM/yyyy")}</p>
+                </div>}
+
+                <Divider flexItem orientation={isMobile ? "horizontal" : "vertical"} />
+
+                {/* Reservation */}
+                {reservationData && <div className={style.confirmSection}>
+                    <h3>Reservation</h3>
+                    <p><b>Locator:</b>{" "}{reservationData.locator}</p>
+                    <p><b>Passenger Count:</b>{" "}{reservationData.passenger_count}</p>
+                    <p><b>Passengers:</b>{" "}{reservationData.passengers}</p>
+                    <p><b>Supplier:</b>{" "}{supplier?.name}</p>
+                    <p><b>Issuer(a):</b>{" "}{issuer?.name}</p>
                 </div>}
             </div>
 
