@@ -10,6 +10,7 @@ import {
     IndicationInput,
     PaymentInput,
     ReceivedInput,
+    SaleDateInput,
     SellerInput,
     TypeInput,
 } from "../sale-section/sale-inputs";
@@ -65,7 +66,6 @@ export default function SaleSectionForm() {
 
     return (
         <div className={style.sale}>
-            <h3>Sale Details</h3>
             <div className={style.inputs}>
                 <div className={style.couple}>
                     <IndicationInput
@@ -95,11 +95,9 @@ export default function SaleSectionForm() {
                     />
                 </div>
                 <div className={style.couple}>
-                    <DateInput<CreateSaleForm>
+                    <SaleDateInput
                         control={saleControl}
                         errors={saleErrors}
-                        name="sale_date"
-                        label="Sale date"
                     />
                     <TypeInput
                         control={saleControl}

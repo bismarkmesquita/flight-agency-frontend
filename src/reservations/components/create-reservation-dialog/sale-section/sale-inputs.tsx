@@ -1,7 +1,7 @@
 import { User } from '@/auth/models/user';
 import { formatDateInput, formatMoney } from '@/base/utils/format-inputs';
 import { CreateSaleForm } from '@/reservations/models/forms';
-import { PAYMENT_METHOD_LABELS, PaymentMethod, SALE_TYPE, SaleType } from '@/reservations/models/sale';
+import { PAYMENT_METHOD_LABELS, PaymentMethod, SALE_TYPE_LABELS, SaleType } from '@/reservations/models/sale';
 import { Autocomplete, MenuItem, TextField } from '@mui/material';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 
@@ -86,7 +86,7 @@ export function PaymentInput({
   );
 }
 
-export const typeOptions = Object.entries(SALE_TYPE).map(
+export const typeOptions = Object.entries(SALE_TYPE_LABELS).map(
   ([value, label]) => ({
     value: value as SaleType,
     label,
@@ -228,7 +228,7 @@ export function IndicationInput({
           value: INDICATION_MAX_LENGHT,
           message: `Maximum of ${INDICATION_MAX_LENGHT} characters.`,
         },
-       }}
+      }}
       render={({ field }) => (
         <TextField
           variant='outlined'
@@ -242,6 +242,38 @@ export function IndicationInput({
             errors.indication?.message ?? `${field.value?.length ?? 0}/${INDICATION_MAX_LENGHT} characters.`
           }
           slotProps={{ htmlInput: { maxLength: INDICATION_MAX_LENGHT } }}
+        >
+        </TextField>
+      )}
+    />
+  );
+}
+
+export function SaleDateInput({
+  control,
+  errors,
+}: {
+  control: Control<CreateSaleForm>;
+  errors: FieldErrors<CreateSaleForm>;
+}) {
+  return (
+    <Controller
+      name='sale_date'
+      control={control}
+      render={({ field }) => (
+        <TextField
+          variant='outlined'
+          fullWidth
+          type='date'
+          size='small'
+          label='Sale date'
+          slotProps={
+            { inputLabel: { shrink: true } }
+          }
+          value={formatDateInput(field.value)}
+          onChange={field.onChange}
+          error={!!errors.sale_date}
+          helperText={errors.sale_date?.message}
         >
         </TextField>
       )}

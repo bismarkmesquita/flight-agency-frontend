@@ -1,7 +1,7 @@
 import { User } from "@/auth/models/user";
 import { Customer } from "@/customers/models/customer";
 
-export const SALE_TYPE = {
+export const SALE_TYPE_LABELS = {
     b2b: "B2B",
     b2c: "B2C",
 } as const;
@@ -14,7 +14,7 @@ export const PAYMENT_METHOD_LABELS = {
     ticket: "Ticket",
 } as const;
 
-export type SaleType = keyof typeof SALE_TYPE;
+export type SaleType = keyof typeof SALE_TYPE_LABELS;
 export type PaymentMethod = keyof typeof PAYMENT_METHOD_LABELS;
 
 export interface Sale {

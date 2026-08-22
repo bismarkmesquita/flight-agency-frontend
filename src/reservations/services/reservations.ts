@@ -9,14 +9,20 @@ import { CreateReservationForm, CreateSaleForm } from "../models/forms";
 class ReservationService {
     constructor(private privateAPI: AxiosInstance) { }
 
-    async createReservation(data: CreateReservationForm) {
+    async createReservation(
+        sale: CreateSaleForm,
+        reservation: CreateReservationForm
+    ) {
         interface ReservationResponse {
-            reservation: Reservation;
+            reservation_id: number;
+            sale_id: number;
         }
+
         const response = await this.privateAPI.post<APIResponse<ReservationResponse>>(
             '/agency/reservations/',
-            data
+            { sale, reservation }
         );
+
         return response.data;
     }
 

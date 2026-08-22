@@ -3,7 +3,13 @@ import style from "../create-reservation-dialog.module.scss";
 import { CreateReservationForm } from "@/reservations/models/forms";
 import { useForm } from "react-hook-form";
 import { useReservationStepperContext } from "@/reservations/providers/reservation-stepper-context";
-import { IssuerInput, LocatorInput, PassengersInput, SupplierInput } from "./reservation-inputs";
+import {
+    IssuerInput,
+    LocatorInput,
+    PassengerCountInput,
+    PassengersInput,
+    SupplierInput
+} from "./reservation-inputs";
 import { useManagementContext } from "@/management/providers/management-context";
 import { useEffect } from "react";
 
@@ -57,10 +63,16 @@ export default function ReservationSectionForm() {
                     control={reservationControl}
                     errors={reservationErrors}
                 />
-                <PassengersInput
-                    control={reservationControl}
-                    errors={reservationErrors}
-                />
+                <div className={style.couple}>
+                    <PassengersInput
+                        control={reservationControl}
+                        errors={reservationErrors}
+                    />
+                    <PassengerCountInput
+                        control={reservationControl}
+                        errors={reservationErrors}
+                    />
+                </div>
                 <div className={style.couple}>
                     <IssuerInput
                         control={reservationControl}
@@ -81,7 +93,7 @@ export default function ReservationSectionForm() {
                     color="primary"
                     onClick={handleConfirmAndNext}
                 >
-                    Register reservation
+                    Next
                 </Button>
             </div>
         </div>
