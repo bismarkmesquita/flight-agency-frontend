@@ -1,0 +1,80 @@
+.main {
+  @include column-gap(32px, flex-start, flex-start);
+  padding: 32px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  width: 100%;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.kpis {
+  display: grid;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  grid-template-columns: repeat(4, 1fr);
+
+  @include mobile {
+    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.charts,
+.tables {
+  display: grid;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+
+  @include mobile {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.year {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.card {
+  @include column-gap(8px);
+  @include bordered-container;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+}
+
+.header {
+  @include row-gap(8px, space-between, center);
+  width: 100%;
+
+  @include mobile {
+    @include column-gap(8px, center, center);
+  }
+
+  .dropdown {
+    max-width: 30%;
+  }
+}
+
+.value {
+  font-size: 24px;
+  font-weight: 600;
+
+  @include mobile {
+    font-size: 20px;
+  }
+}
+
+.loading {
+  align-self: center;
+  margin: 10% 0;
+}
