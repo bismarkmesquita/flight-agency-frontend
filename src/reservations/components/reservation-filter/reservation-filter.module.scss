@@ -1,0 +1,13 @@
+.root {
+    @include row-gap(16px);
+}
+
+.search {
+    flex: 2;
+}
+
+@include mobile {
+    .root {
+        @include row-gap(8px);
+    }
+}

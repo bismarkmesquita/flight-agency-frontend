@@ -1,0 +1,58 @@
+.root {
+    .title {
+        @include row-gap(16px, space-between, center);
+    }
+
+    h3 {
+        font-weight: 600;
+    }
+}
+
+.flight,
+.customer,
+.sale,
+.reservation,
+.inputs,
+.section,
+.stepper {
+    @include column-gap(16px, center, stretch);
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.search {
+    @include row-gap(16px, center, center);
+}
+
+.dropdown {
+    flex: 1;
+}
+
+.couple,
+.actions {
+    @include row-gap(8px, center, center);
+}
+
+.confirm {
+    @include row-gap(8px, space-between, flex-start);
+    margin: 2vw;
+}
+
+.confirmSection {
+    @include column-gap(8px, center, stretch);
+}
+
+@include mobile {
+    .confirm {
+        @include column-gap(16px, space-between, flex-start);
+        margin: 2vw;
+    }
+
+    .couple {
+        @include column-gap(16px, space-between, flex-start);
+    }
+}
