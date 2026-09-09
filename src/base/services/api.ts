@@ -429,7 +429,7 @@ function onRequestError(
   router: AppRouterInstance
 ): Promise<AxiosResponse> {
   if (error.status === 401 || error.status === 403) {
-    localStorage.removeItem('ACCESS_TOKEN');
+    localStorage.removeItem('_ACCESS_TOKEN');
     router.push('/login');
   }
 

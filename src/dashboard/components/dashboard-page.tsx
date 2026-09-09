@@ -67,15 +67,15 @@ export default function Dashboard() {
                             title={"Reservations"}
                             value={data?.kpis.total_reservations}
                         />
-                        {<KPICard
+                        <KPICard
                             title={"Total sale"}
                             value={`$ ${formatMoney(data?.kpis.total_sold)}`}
-                        />}
-                        {<KPICard
+                        />
+                        <KPICard
                             title={"Average Ticket"}
                             value={`$ ${formatMoney(data?.kpis.avg_ticket)}`}
-                        />}
-                        {data?.kpis.total_profit && <KPICard
+                        />
+                        {data?.kpis.total_profit != null && <KPICard
                             title={"Profit"}
                             value={`$ ${formatMoney(data.kpis.total_profit)}`}
                         />}

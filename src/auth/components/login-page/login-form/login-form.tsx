@@ -1,6 +1,8 @@
 import style from '@/auth/components/login-page/login-form/login-form.module.scss';
 import {
   Button,
+  Checkbox,
+  FormControlLabel,
   IconButton,
   InputAdornment,
   TextField,
@@ -22,7 +24,7 @@ import { DEMO_CREDENTIALS, LoginRole } from '@/auth/models/demo-credentials';
 export type LoginFormInfo = {
   login: string;
   password: string;
-  build_number: number;
+  keep_connected: boolean;
 };
 
 export function LoginForm() {
@@ -41,7 +43,7 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginFormInfo>({
     defaultValues: {
-      build_number: parseInt(process.env.NEXT_PUBLIC_BUILD_NUMBER!),
+      keep_connected: false,
     },
   });
 
@@ -167,6 +169,22 @@ export function LoginForm() {
               )}
             />
           </div>
+          <Controller
+            name='keep_connected'
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    {...field}
+                    checked={field.value}
+                    size='small'
+                  />
+                }
+                label='Keep me logged in'
+              />
+            )}
+          />
           <Button type='submit' variant='contained' color='primary'>
             Sign In
           </Button>
