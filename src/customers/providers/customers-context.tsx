@@ -5,14 +5,10 @@ import { Customer } from "@/customers/models/customer";
 import { useCustomerService, usePaginatedCustomers } from "../services/customers";
 import { APIResponse } from "@/base/services/api";
 
-interface Response {
-    customer: Customer;
-}
-
 interface CustomersContextType {
     filteredCustomers: Customer[];
-    createCustomer: (data: Customer) => Promise<APIResponse<Response>>;
-    updateCustomer: (data: Customer, id: number) => Promise<APIResponse<Response>>;
+    createCustomer: (data: Customer) => Promise<APIResponse<Customer>>;
+    updateCustomer: (data: Customer, id: number) => Promise<APIResponse<Customer>>;
 
     searchQuery: string;
     setSearchQuery: (searchQuery: string) => void;
@@ -54,7 +50,7 @@ export function CustomersProvider({ children }: { children: ReactNode }) {
         const response = await customerService.createCustomer(data);
 
         if (response.success) {
-            paginatedCustomers.addItem(response.customer);
+            paginatedCustomers.addItem(response.data!);
         }
 
         return response;

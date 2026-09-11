@@ -32,14 +32,14 @@ export default function FlightSectionForm() {
     const fetchAirlines = async () => {
         const response = await flightService.fetchAirlines();
         if (response.success) {
-            setAirlines(response.airlines);
+            setAirlines(response.data ?? []);
         }
     };
 
     const fetchAirports = async () => {
         const response = await flightService.fetchAirports();
         if (response.success) {
-            setAirports(response.airports);
+            setAirports(response.data ?? []);
         }
     };
 
@@ -103,7 +103,7 @@ export default function FlightSectionForm() {
             return;
         }
 
-        const createdFlight = response.flight;
+        const createdFlight = response.data!;
 
         setSelectedFlights([
             ...selectedFlights,

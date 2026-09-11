@@ -66,7 +66,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         const response = await dashboardService.fetchDashboard({ period });
 
         if (response.success) {
-            setData(response.data);
+            setData(response.data ?? null);
         } else {
             snackbar.showSnackbar(`${response.message}`, "error");
         }

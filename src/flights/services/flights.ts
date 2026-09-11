@@ -10,39 +10,27 @@ class FlightService {
     constructor(private privateAPI: AxiosInstance) { }
 
     async fetchAirlines() {
-        interface Response {
-            airlines: Airline[];
-        }
-        const response = await this.privateAPI.get<APIResponse<Response>>('/flights/airlines/');
+        const response = await this.privateAPI.get<APIResponse<Airline[]>>('/flights/airlines/');
         return response.data;
     }
 
     async fetchAirports() {
-        interface Response {
-            airports: Airport[];
-        }
-        const response = await this.privateAPI.get<APIResponse<Response>>('/flights/airports/');
+        const response = await this.privateAPI.get<APIResponse<Airport[]>>('/flights/airports/');
         return response.data;
     }
 
     async fetchFlights() {
-        interface Response {
-            flights: Flight[];
-        }
-        const response = await this.privateAPI.get<APIResponse<Response>>('/flights/next/');
+        const response = await this.privateAPI.get<APIResponse<Flight[]>>('/flights/next/');
         return response.data;
     }
 
     async createFlight(data: FlightForm) {
-        interface Response {
-            flight: Flight;
-        }
         const payload = {
             ...data,
             arrival_date: data.arrival_date.toISOString(),
             departure_date: data.departure_date.toISOString(),
         };
-        const response = await this.privateAPI.post<APIResponse<Response>>(
+        const response = await this.privateAPI.post<APIResponse<Flight>>(
             '/flights/',
             payload
         );

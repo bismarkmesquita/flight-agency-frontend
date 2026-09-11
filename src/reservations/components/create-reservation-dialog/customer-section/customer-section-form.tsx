@@ -51,7 +51,7 @@ export default function CustomerSectionForm() {
             return;
         }
 
-        const createdCustomer = response.customer;
+        const createdCustomer = response.data!;
         setSelectedCustomer(createdCustomer);
 
         handleNext();

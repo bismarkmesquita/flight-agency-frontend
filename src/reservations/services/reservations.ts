@@ -12,12 +12,9 @@ class ReservationService {
         sale: CreateSaleForm,
         reservation: CreateReservationForm
     ) {
-        interface ReservationResponse {
-            reservation_id: number;
-            sale_id: number;
-        }
-
-        const response = await this.privateAPI.post<APIResponse<ReservationResponse>>(
+        const response = await this.privateAPI.post<
+            APIResponse<{ reservation_id: number; sale_id: number }>
+        >(
             '/agency/reservations/',
             { sale, reservation }
         );

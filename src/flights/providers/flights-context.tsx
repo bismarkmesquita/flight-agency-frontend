@@ -23,7 +23,7 @@ export function FlightsProvider({ children }: { children: ReactNode }) {
     const fetchFlights = async () => {
         const response = await flightService.fetchFlights();
         if (response.success) {
-            setFlights(response.flights);
+            setFlights(response.data ?? []);
         } else {
             console.error(response.message)
         }
@@ -33,7 +33,7 @@ export function FlightsProvider({ children }: { children: ReactNode }) {
         const response = await flightService.createFlight(data);
 
         if (response.success) {
-            setFlights(prev => [...prev, response.flight]);
+            setFlights(prev => [...prev, response.data!]);
         }
 
         return response;

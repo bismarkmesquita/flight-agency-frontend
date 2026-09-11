@@ -9,21 +9,15 @@ class ManagementService {
     constructor(private privateAPI: AxiosInstance) { }
 
     async fetchUsers() {
-        interface Response {
-            users: User[];
-        }
-        const response = await this.privateAPI.get<APIResponse<Response>>('/auth/users/');
+        const response = await this.privateAPI.get<APIResponse<User[]>>('/auth/users/');
         return response.data;
     }
 
     async createUser(data: UserForm) {
-        interface Response {
-            user: User;
-        }
         const payload = {
             ...data
         };
-        const response = await this.privateAPI.post<APIResponse<Response>>(
+        const response = await this.privateAPI.post<APIResponse<User>>(
             '/auth/create/',
             payload
         );
@@ -31,13 +25,10 @@ class ManagementService {
     }
 
     async updateUser(data: UserForm, id: number) {
-        interface Response {
-            user: User;
-        }
         const payload = {
             ...data,
         };
-        const response = await this.privateAPI.put<APIResponse<Response>>(
+        const response = await this.privateAPI.put<APIResponse<User>>(
             `/auth/update/${id}/`,
             payload
         );
@@ -45,18 +36,12 @@ class ManagementService {
     }
 
     async fetchSuppliers() {
-        interface Response {
-            suppliers: Supplier[];
-        }
-        const response = await this.privateAPI.get<APIResponse<Response>>('/agency/suppliers/');
+        const response = await this.privateAPI.get<APIResponse<Supplier[]>>('/agency/suppliers/');
         return response.data;
     }
 
     async createSupplier(data: SupplierForm) {
-        interface Response {
-            supplier: Supplier;
-        }
-        const response = await this.privateAPI.post<APIResponse<Response>>(
+        const response = await this.privateAPI.post<APIResponse<Supplier>>(
             '/agency/suppliers/create/',
             data
         );
@@ -64,10 +49,7 @@ class ManagementService {
     }
 
     async updateSupplier(data: SupplierForm, id: number) {
-        interface Response {
-            supplier: Supplier;
-        }
-        const response = await this.privateAPI.put<APIResponse<Response>>(
+        const response = await this.privateAPI.put<APIResponse<Supplier>>(
             `/agency/suppliers/${id}/`,
             data
         );

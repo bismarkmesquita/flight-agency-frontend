@@ -7,13 +7,10 @@ class CustomerService {
     constructor(private privateAPI: AxiosInstance) { }
 
     async createCustomer(data: Customer) {
-        interface Response {
-            customer: Customer;
-        }
         const payload = {
             ...data
         };
-        const response = await this.privateAPI.post<APIResponse<Response>>(
+        const response = await this.privateAPI.post<APIResponse<Customer>>(
             '/agency/customers/',
             payload
         );
@@ -21,13 +18,10 @@ class CustomerService {
     }
 
     async updateCustomer(data: Customer, id: number) {
-        interface Response {
-            customer: Customer;
-        }
         const payload = {
             ...data
         };
-        const response = await this.privateAPI.put<APIResponse<Response>>(
+        const response = await this.privateAPI.put<APIResponse<Customer>>(
             `/agency/customers/${id}/`,
             payload
         );

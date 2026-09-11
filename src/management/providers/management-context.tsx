@@ -7,22 +7,14 @@ import { User } from "@/auth/models/user";
 import { useManagementService } from "../services/management";
 import { Supplier } from "../models/supplier";
 
-interface UserResponse {
-    user: User;
-}
-
-interface SupplierResponse {
-    supplier: Supplier;
-}
-
 interface ManagementContextType {
     users: User[];
-    createUser: (data: UserForm) => Promise<APIResponse<UserResponse>>;
-    updateUser: (data: UserForm, id: number) => Promise<APIResponse<UserResponse>>;
+    createUser: (data: UserForm) => Promise<APIResponse<User>>;
+    updateUser: (data: UserForm, id: number) => Promise<APIResponse<User>>;
 
     suppliers: Supplier[];
-    createSupplier: (data: SupplierForm) => Promise<APIResponse<SupplierResponse>>;
-    updateSupplier: (data: SupplierForm, id: number) => Promise<APIResponse<SupplierResponse>>;
+    createSupplier: (data: SupplierForm) => Promise<APIResponse<Supplier>>;
+    updateSupplier: (data: SupplierForm, id: number) => Promise<APIResponse<Supplier>>;
 }
 
 const ManagementContext = createContext<ManagementContextType | null>(null);
@@ -40,7 +32,7 @@ export function ManagementProvider({ children }: { children: ReactNode }) {
     const fetchUsers = async () => {
         const response = await managementService.fetchUsers();
         if (response.success) {
-            setUsers(response.users);
+            setUsers(response.data ?? []);
         } else {
             console.error(response.message)
         }
@@ -50,7 +42,7 @@ export function ManagementProvider({ children }: { children: ReactNode }) {
         const response = await managementService.createUser(data);
 
         if (response.success) {
-            setUsers(prev => [...prev, response.user]);
+            setUsers(prev => [...prev, response.data!]);
         }
 
         return response;
@@ -62,7 +54,7 @@ export function ManagementProvider({ children }: { children: ReactNode }) {
         if (response.success) {
             setUsers(prev =>
                 prev.map(s =>
-                    s.id === id ? response.user : s
+                    s.id === id ? response.data! : s
                 )
             );
         }
@@ -73,7 +65,7 @@ export function ManagementProvider({ children }: { children: ReactNode }) {
     const fetchSuppliers = async () => {
         const response = await managementService.fetchSuppliers();
         if (response.success) {
-            setSuppliers(response.suppliers);
+            setSuppliers(response.data ?? []);
         } else {
             console.error(response.message)
         }
@@ -83,7 +75,7 @@ export function ManagementProvider({ children }: { children: ReactNode }) {
         const response = await managementService.createSupplier(data);
 
         if (response.success) {
-            setSuppliers(prev => [...prev, response.supplier]);
+            setSuppliers(prev => [...prev, response.data!]);
         }
 
         return response;
@@ -95,7 +87,7 @@ export function ManagementProvider({ children }: { children: ReactNode }) {
         if (response.success) {
             setSuppliers(prev =>
                 prev.map(s =>
-                    s.id === id ? response.supplier : s
+                    s.id === id ? response.data! : s
                 )
             );
         }

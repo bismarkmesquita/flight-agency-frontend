@@ -7,10 +7,7 @@ class DashboardService {
     constructor(private privateAPI: AxiosInstance) { }
 
     async fetchDashboard(filters?: DashboardFilters) {
-        interface DashboardResponse {
-            data: GetDashboardResponse;
-        }
-        const response = await this.privateAPI.get<APIResponse<DashboardResponse>>(
+        const response = await this.privateAPI.get<APIResponse<GetDashboardResponse>>(
             '/agency/dashboard/',
             { params: filters }
         );

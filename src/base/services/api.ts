@@ -27,10 +27,12 @@ export type {
   FileDownloadOptions,
 };
 
-type APIResponse<T> = T & {
-  success?: boolean;
+type APIResponse<T> = {
+  success: boolean;
+  message?: string | null;
+  data?: T | null;
   reason?: string;
-  message?: string;
+  errors?: Record<string, unknown> | null;
 };
 
 // File download options interface
@@ -239,21 +241,22 @@ function usePaginatedEndpoint<P, Q extends Record<string, unknown>>({
       try {
         const response = await API.get<PaginatedResponse<P>>(getUrl(_filters));
         const data = response.data;
-        if (!data.success) {
+        if (!data.success || !data.data) {
           _setError(data.reason);
         } else {
-          _setNumPages(data.num_pages);
+          const pagination = data.data;
+          _setNumPages(pagination.num_pages);
           const start = (page - 1) * pageSize;
 
           // preserve existing items while extending array to full size if needed
           const fetchedItems = [..._fetchedItems];
-          if (fetchedItems.length < data.num_pages * pageSize) {
-            fetchedItems.length = data.num_pages * pageSize;
+          if (fetchedItems.length < pagination.num_pages * pageSize) {
+            fetchedItems.length = pagination.num_pages * pageSize;
             fetchedItems.fill(undefined, _fetchedItems.length);
           }
-          fetchedItems.splice(start, pageSize, ...data.items);
+          fetchedItems.splice(start, pageSize, ...pagination.items);
           _setFetchedItems(fetchedItems);
-          setItems(data.items);
+          setItems(pagination.items);
         }
       } catch (error) {
         console.error('Error fetching paginated data:', error);
@@ -310,7 +313,7 @@ export function useFrontendPagination<T>({ url, pageSize }: UseFrontendPaginatio
     try {
       setLoading(true);
       const res = await API.get(url);
-      setAllItems(res.data.items ?? []);
+      setAllItems(res.data.data ?? []);
     } catch (err) {
       console.error(err);
       setError("Error loading data.");
@@ -507,7 +510,7 @@ async function doTaskRequest<
     } as T;
   }
 
-  const taskId = taskResult.task_id!;
+  const taskId = taskResult.data!.task_id!;
   const startTime = Date.now();
   while (true) {
     const poolResult = await poolFunction(taskId);
@@ -518,11 +521,11 @@ async function doTaskRequest<
       } as T;
     }
 
-    if (poolResult.status === TaskStatus.SUCCESS) {
+    if (poolResult.data?.status === TaskStatus.SUCCESS) {
       return await resultFunction(taskId);
     }
 
-    if (poolResult.status === TaskStatus.FAILURE) {
+    if (poolResult.data?.status === TaskStatus.FAILURE) {
       return {
         success: false,
         message: poolResult.message ?? 'Task failed',

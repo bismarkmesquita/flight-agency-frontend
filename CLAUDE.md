@@ -84,29 +84,28 @@ Exports **hooks**, not a singleton. Both build an axios instance with
   throwing — every service does `const resp = await api.get(...); return resp.data;` and every
   caller branches on `resp.success`.
 - **`useFrontendPagination<T>({ url, pageSize })`** — fetches the whole list once
-  (`res.data.items`), slices client-side. This is the pagination in use (`usePaginatedCustomers`,
+  (`res.data.data`), slices client-side. This is the pagination in use (`usePaginatedCustomers`,
   `usePaginatedReservation`).
 - `usePaginatedEndpoint`, `doTaskRequest`, `downloadFile` exist but are **unused / dead** — don't
   build on them.
 
 ## Service pattern
 
-One class per feature, exposed via a `useMemo`'d hook. Response shapes declared inline.
+One class per feature, exposed via a `useMemo`'d hook. The axios call is typed directly as
+`APIResponse<X>` with `X` the model type returned under `data` — no per-method wrapper interface.
 
 ```ts
 class FlightService {
   constructor(private privateAPI: AxiosInstance) {}
 
   async fetchFlights() {
-    interface Response { flights: Flight[]; }
-    const response = await this.privateAPI.get<APIResponse<Response>>('/flights/next/');
-    return response.data;                       // APIResponse<T> = T & { success?, reason?, message? }
+    const response = await this.privateAPI.get<APIResponse<Flight[]>>('/flights/next/');
+    return response.data;    // APIResponse<T> = { success, message?, data?: T, reason?, errors? }
   }
 
   async createFlight(data: FlightForm) {
-    interface Response { flight: Flight; }
     const payload = { ...data, departure_date: data.departure_date.toISOString() };  // ad-hoc Date→string
-    const response = await this.privateAPI.post<APIResponse<Response>>('/flights/', payload);
+    const response = await this.privateAPI.post<APIResponse<Flight>>('/flights/', payload);
     return response.data;
   }
 }
@@ -132,13 +131,13 @@ export function FlightsProvider({ children }: { children: ReactNode }) {
 
   const fetchFlights = async () => {
     const response = await flightService.fetchFlights();
-    if (response.success) setFlights(response.flights);
+    if (response.success) setFlights(response.data ?? []);
     else console.error(response.message);                // failure path is usually just console.error
   };
 
   const createFlight = async (data: FlightForm) => {
     const response = await flightService.createFlight(data);
-    if (response.success) setFlights(prev => [...prev, response.flight]);   // optimistic append
+    if (response.success) setFlights(prev => [...prev, response.data!]);   // optimistic append
     return response;                                                        // caller shows the snackbar
   };
 
@@ -153,7 +152,7 @@ export const useFlightsContext = () => {
 ```
 
 - Mutators return the raw `APIResponse` so the calling dialog can `snackbar.showSnackbar(...)`.
-- Update in place with `prev.map(x => x.id === id ? response.x : x)`; or expose `refresh()`.
+- Update in place with `prev.map(x => x.id === id ? response.data! : x)`; or expose `refresh()`.
 - `SnackbarContext` (`useSnackbar().showSnackbar(msg, 'success'|'error'|...)`) is the primary
   success/error channel. `dashboard-context.tsx` is the only provider that surfaces *fetch* errors
   to the user.
@@ -168,8 +167,11 @@ export const useFlightsContext = () => {
 Plain `interface`s in `src/<feature>/models/`. **snake_case, 1:1 with DRF JSON — no mapping layer.**
 `forms.ts` holds `*Form` payload types; read models embed nested objects while `*Form` types use
 `*_id` foreign keys (`airline_id`, `flight_ids: number[]`, `seller_id`, …). The only client→server
-transforms are ad-hoc `Date.toISOString()` in services. Response wrappers are re-declared as a local
-`interface Response { … }` inside each service method.
+transforms are ad-hoc `Date.toISOString()` in services. The response envelope itself is one shared
+type, `APIResponse<T>` (`src/base/services/api.ts`) — every endpoint nests its payload under `data`,
+so services type the axios call as `APIResponse<X>` directly with the model type, no more
+per-method wrapper interface. The one exception is `/auth/login/`'s success path, which returns
+knox's raw (un-enveloped) `{token, expiry, user}` — see `auth/models/login-response.ts`.
 
 ## Auth
 
