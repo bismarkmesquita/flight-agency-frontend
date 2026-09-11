@@ -1,5 +1,6 @@
 import { LoginResponse } from '../models/login-response';
 import { User, userLocalStorageKey } from '../models/user';
+import { AccessLevel } from '../enums/access-level';
 import { clearAccessToken, setAccessToken } from './token';
 
 export function clearAuth() {
@@ -20,4 +21,8 @@ export function getAccessInfo(): User | null {
 
   const user = localStorage.getItem(userLocalStorageKey);
   return user ? JSON.parse(user) : null;
+}
+
+export function isFullUser(user: User | null): boolean {
+  return user?.access_level === AccessLevel.FULL;
 }

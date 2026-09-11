@@ -1,13 +1,15 @@
 import { Supplier } from "@/management/models/supplier";
 import { Close } from "@mui/icons-material";
-import { Button, Dialog, DialogContent, DialogTitle, Divider, IconButton } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, Tooltip } from "@mui/material";
 import style from "./content-supplier-dialog.module.scss";
+import { FULL_USER_ONLY_TIP } from "@/auth/enums/access-level";
 
 type Props = {
     open: boolean,
     supplier: Supplier,
     onClose: () => void;
     onUpdate: () => void;
+    canEdit: boolean;
 }
 
 export default function ContentSupplierDialog({
@@ -15,6 +17,7 @@ export default function ContentSupplierDialog({
     supplier,
     onClose,
     onUpdate,
+    canEdit,
 }: Props) {
     return (
         <Dialog open={open} maxWidth='xs' fullWidth>
@@ -42,13 +45,17 @@ export default function ContentSupplierDialog({
                     <p><b>Address Number:</b> {supplier.address_number}</p>
                     <p><b>Complement:</b> {supplier.complement}</p>
                 </div>
-                <Button
-                    className={style.button}
-                    variant="contained"
-                    onClick={onUpdate}
-                >
-                    Edit supplier
-                </Button>
+                <Tooltip title={canEdit ? "" : FULL_USER_ONLY_TIP}>
+                    <span className={style.button}>
+                        <Button
+                            variant="contained"
+                            onClick={onUpdate}
+                            disabled={!canEdit}
+                        >
+                            Edit supplier
+                        </Button>
+                    </span>
+                </Tooltip>
             </DialogContent>
         </Dialog>
     )

@@ -189,6 +189,14 @@ knox's raw (un-enveloped) `{token, expiry, user}` — see `auth/models/login-res
 - Roles: `src/auth/enums/user-role.ts` (`UserRole` enum + `USER_ROLE_TO_LABEL`). Used to hide the
   "Management" menu item (`lateral-menu.tsx`), gate the dashboard seller ranking, and limit the
   user-create role select. Demo credentials: `src/auth/models/demo-credentials.ts`.
+- Access level: `src/auth/enums/access-level.ts` (`AccessLevel.DEMO` / `FULL`) mirrors the backend's
+  `User.access_level` — a `DEMO` user can read everything but every write endpoint (except `/auth/`
+  user management, which is role-gated only) rejects them with `403`. `isFullUser(user)`
+  (`auth/utils/auth.ts`) is the check; action buttons that trigger a create/update (e.g. "Add
+  Supplier", row `Edit`) follow the same `getAccessInfo()`-in-`useEffect` pattern as role checks,
+  then wrap the `Button`/`IconButton` in a MUI `Tooltip` + `<span>` (required for a tooltip on a
+  disabled element) with `disabled={!fullUser}` and the title "Only available for Full users." when
+  not full — see `suppliers-section.tsx`, `customers-page.tsx`, `reservations-page.tsx`.
 - Logout: `LogoutButton` → `authService.logout()` → `clearAuth()` (which calls
   `localStorage.clear()`) → `/login`.
 
