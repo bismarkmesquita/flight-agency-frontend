@@ -1,6 +1,6 @@
 import style from "./create-customer-dialog.module.scss";
 import { useForm } from "react-hook-form";
-import { Button, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Divider, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { Customer } from "@/customers/models/customer";
 import { useEffect, useState } from "react";
@@ -57,7 +57,7 @@ export default function CreateOrEditCustomerDialog({ open, onClose, customer }: 
 
         if (response.success) {
             snackbar.showSnackbar(
-                customer ? 'Customer updated!' : 'Client created!',
+                customer ? 'Customer updated!' : 'Customer created!',
                 'success'
             );
             onClose();
@@ -70,7 +70,7 @@ export default function CreateOrEditCustomerDialog({ open, onClose, customer }: 
         <Dialog open={open} maxWidth='xs' fullWidth>
             <LoadingWrapper className={style.loading} loading={loading}>
                 <DialogTitle className={style.title}>
-                    {customer ? "Update client" : "Register customer"}
+                    {customer ? "Update customer" : "Register customer"}
                     <IconButton
                         color="primary"
                         onClick={onClose}
@@ -78,6 +78,7 @@ export default function CreateOrEditCustomerDialog({ open, onClose, customer }: 
                         <Close />
                     </IconButton>
                 </DialogTitle>
+                <Divider />
                 <DialogContent className={style.inputs}>
                     <NameInput
                         control={customerControl}
@@ -97,7 +98,7 @@ export default function CreateOrEditCustomerDialog({ open, onClose, customer }: 
                             color="primary"
                             onClick={handleSubmit(handleUpdateCustomer)}
                         >
-                            {customer ? "Update client" : "Register customer"}
+                            {customer ? "Update customer" : "Register customer"}
                         </Button>
                     </div>
                 </DialogContent>
