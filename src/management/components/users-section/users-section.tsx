@@ -7,22 +7,30 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow
+    TableRow,
+    Tooltip
 } from "@mui/material";
 import style from "./users-section.module.scss";
 import { useIsMobile } from "@/base/styles/hooks";
 import { useManagementContext } from "@/management/providers/management-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Add, Edit } from "@mui/icons-material";
 import { User } from "@/auth/models/user";
 import CreateOrEditUserDialog from "./create-or-edit-user-dialog/create-or-edit-user-dialog";
 import { USER_ROLE_TO_LABEL } from "@/auth/enums/user-role";
+import { FULL_USER_ONLY_TIP } from "@/auth/enums/access-level";
+import { getAccessInfo, isFullUser } from "@/auth/utils/auth";
 
 export default function UsersSection() {
     const isMobile = useIsMobile();
     const { users } = useManagementContext();
     const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [fullUser, setFullUser] = useState<boolean>(false);
+
+    useEffect(() => {
+        setFullUser(isFullUser(getAccessInfo()));
+    }, []);
 
     const openEditDialog = (user: User) => {
         setSelectedUser(user);
@@ -51,6 +59,7 @@ export default function UsersSection() {
                             key={index}
                             user={user}
                             onEdit={() => openEditDialog(user)}
+                            canEdit={fullUser}
                         />
                     ))
                     ) : (
@@ -75,20 +84,25 @@ export default function UsersSection() {
             <div className={style.header}>
                 <h2>Employees</h2>
                 <div className={style.buttons}>
-                    {isMobile ? (
-                        <IconButton color="primary" onClick={openCreateDialog}>
-                            <Add />
-                        </IconButton>
-                    ) : (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<Add />}
-                            onClick={openCreateDialog}
-                        >
-                            Add Employees
-                        </Button>
-                    )}
+                    <Tooltip title={fullUser ? "" : FULL_USER_ONLY_TIP}>
+                        <span>
+                            {isMobile ? (
+                                <IconButton color="primary" onClick={openCreateDialog} disabled={!fullUser}>
+                                    <Add />
+                                </IconButton>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<Add />}
+                                    onClick={openCreateDialog}
+                                    disabled={!fullUser}
+                                >
+                                    Add Employees
+                                </Button>
+                            )}
+                        </span>
+                    </Tooltip>
                 </div>
             </div>
             {table}
@@ -96,9 +110,10 @@ export default function UsersSection() {
     )
 }
 
-function UserRow({ user, onEdit }: {
+function UserRow({ user, onEdit, canEdit }: {
     user: User,
-    onEdit: (u: User) => void
+    onEdit: (u: User) => void,
+    canEdit: boolean,
 }) {
     return (
         <TableRow>
@@ -112,12 +127,17 @@ function UserRow({ user, onEdit }: {
                 {USER_ROLE_TO_LABEL[user.role]}
             </TableCell>
             <TableCell align='center' className={style.size}>
-                <IconButton
-                    color="primary"
-                    onClick={() => onEdit(user)}
-                >
-                    <Edit />
-                </IconButton>
+                <Tooltip title={canEdit ? "" : FULL_USER_ONLY_TIP}>
+                    <span>
+                        <IconButton
+                            color="primary"
+                            onClick={() => onEdit(user)}
+                            disabled={!canEdit}
+                        >
+                            <Edit />
+                        </IconButton>
+                    </span>
+                </Tooltip>
             </TableCell>
         </TableRow>
     );

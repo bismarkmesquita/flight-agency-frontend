@@ -8,11 +8,12 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow
+    TableRow,
+    Tooltip
 } from "@mui/material";
 import style from "./reservations-page.module.scss";
 import { useIsMobile } from "@/base/styles/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Reservation } from "@/reservations/models/reservation";
 import { ReservationFilter } from "./reservation-filter/reservation-filter";
 import { Add } from "@mui/icons-material";
@@ -20,6 +21,8 @@ import { useSearchReservationsContext } from "../providers/search-reservations-c
 import CreateReservationStepperDialog from "./create-reservation-dialog/create-reservation-stepper-dialog";
 import { format } from "date-fns";
 import WelcomeName from "@/base/components/welcome-name/welcome-name";
+import { getAccessInfo, isFullUser } from "@/auth/utils/auth";
+import { FULL_USER_ONLY_TIP } from "@/auth/enums/access-level";
 
 export default function ReservationsPage() {
     const isMobile = useIsMobile();
@@ -35,6 +38,11 @@ export default function ReservationsPage() {
     } = useSearchReservationsContext();
 
     const [openDialogReservation, setOpenDialogReservation] = useState<boolean>(false);
+    const [fullUser, setFullUser] = useState<boolean>(false);
+
+    useEffect(() => {
+        setFullUser(isFullUser(getAccessInfo()));
+    }, []);
 
     const table = (
         <div className={style.table}>
@@ -87,20 +95,29 @@ export default function ReservationsPage() {
                     <ReservationFilter />
                 </div>
                 <div className={style.buttons}>
-                    {isMobile ? (
-                        <IconButton color="primary" onClick={() => setOpenDialogReservation(true)}>
-                            <Add />
-                        </IconButton>
-                    ) : (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<Add />}
-                            onClick={() => setOpenDialogReservation(true)}
-                        >
-                            Add Reservation
-                        </Button>
-                    )}
+                    <Tooltip title={fullUser ? "" : FULL_USER_ONLY_TIP}>
+                        <span>
+                            {isMobile ? (
+                                <IconButton
+                                    color="primary"
+                                    onClick={() => setOpenDialogReservation(true)}
+                                    disabled={!fullUser}
+                                >
+                                    <Add />
+                                </IconButton>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<Add />}
+                                    onClick={() => setOpenDialogReservation(true)}
+                                    disabled={!fullUser}
+                                >
+                                    Add Reservation
+                                </Button>
+                            )}
+                        </span>
+                    </Tooltip>
                 </div>
             </div>
             {table}
