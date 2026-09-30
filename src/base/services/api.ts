@@ -105,6 +105,7 @@ function usePublicAPI(): AxiosInstance {
       timeout: 5 * 60 * 1000,
       transformResponse,
     });
+    applyMockAdapter(instance);
     instance.interceptors.request.use((config) => {
       return config;
     });
@@ -127,6 +128,7 @@ function usePrivateAPI(): AxiosInstance {
       transformResponse,
       responseType: 'json',
     });
+    applyMockAdapter(instance);
     instance.interceptors.request.use((config) => {
       const encodedToken = localStorage.getItem(accessTokenStorageKey);
       if (encodedToken) {
@@ -361,6 +363,15 @@ export function useFrontendPagination<T>({ url, pageSize }: UseFrontendPaginatio
     refresh,
     addItem,
   };
+}
+
+function applyMockAdapter(instance: AxiosInstance) {
+  if (process.env.NEXT_PUBLIC_USE_MOCK === 'true') {
+    instance.defaults.adapter = async (config) => {
+      const { mockAdapter } = await import('@/mock/adapter');
+      return mockAdapter(config);
+    };
+  }
 }
 
 function getModifiedAPI(axiosInstance: AxiosInstance) {

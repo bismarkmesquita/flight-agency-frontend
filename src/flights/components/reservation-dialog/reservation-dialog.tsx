@@ -9,10 +9,15 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow
+    TableRow,
+    Tooltip
 } from "@mui/material";
 import { useIsMobile } from "@/base/styles/hooks";
 import { WhatsApp } from "@mui/icons-material";
+
+// In mock mode the phones are fictional demo data: never send visitors to WhatsApp.
+const WHATSAPP_DISABLED = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
+const WHATSAPP_DISABLED_TIP = "WhatsApp is disabled in the demo.";
 
 export default function ReservationDialog({ open, onClose, flight }: {
     open: boolean,
@@ -34,12 +39,17 @@ export default function ReservationDialog({ open, onClose, flight }: {
                     {reservation.name}
                 </TableCell>
                 <TableCell align='center' className={style.size}>
-                    <Button
-                        endIcon={<WhatsApp />}
-                        onClick={() => openInNewTab(`https://api.whatsapp.com/send?phone=${reservation.phone}`)}
-                    >
-                        {reservation.phone}
-                    </Button>
+                    <Tooltip title={WHATSAPP_DISABLED ? WHATSAPP_DISABLED_TIP : ""}>
+                        <span>
+                            <Button
+                                endIcon={<WhatsApp />}
+                                onClick={() => openInNewTab(`https://api.whatsapp.com/send?phone=${reservation.phone}`)}
+                                disabled={WHATSAPP_DISABLED}
+                            >
+                                {reservation.phone}
+                            </Button>
+                        </span>
+                    </Tooltip>
                 </TableCell>
             </TableRow>
         );
