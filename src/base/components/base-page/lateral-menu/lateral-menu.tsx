@@ -21,6 +21,7 @@ import {
 import MenuItem from './menu-item/menu-item';
 import { useLateralMenuContext } from './provider';
 import LogoutButton from './logout-button/logout-button';
+import ResetDemoButton from './reset-demo-button/reset-demo-button';
 import style from './lateral-menu.module.scss';
 import { useIsMobile } from '@/base/styles/hooks';
 import { UserRole } from '@/auth/enums/user-role';
@@ -148,6 +149,7 @@ export default function LateralMenu({ children }: LateralMenuProps) {
             ))}
         </List>
         <Divider className={style.divider} />
+        <ResetDemoButton />
         <LogoutButton />
       </Drawer>
       <Box className={style.main}>{children}</Box>
